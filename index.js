@@ -5,7 +5,7 @@ if(process.env.NODE_ENV !="production"){
  
 const express=require("express");
 const app=express();
-let port=8080;
+ const port = process.env.PORT || 8080;
  
 
 const path=require("path");
@@ -121,8 +121,8 @@ app.use((err,req, res, next) => {
   let { statusCode=500, message="something went wrong "} = err;
   res.render("./listings/error.ejs",{message});
 });
-app.listen(port,(req,res)=>{
-    console.log("server is running on the port at 8080");
+ app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
 });
  
  
