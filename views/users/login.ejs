@@ -1,0 +1,31 @@
+
+
+<% layout('layouts/layout') -%>
+
+ <% if (error && error.length > 0) { %>
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+  <%= error %>
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+<% } %>
+
+ <div class="row offset-2"> 
+    <div class="col-8">
+        <h4>Login</h4>
+         <form method="post" action="/login">
+            <div class="mb-3">
+          <label for="Username" class="form-label">Username</label>
+          <input id="Username" name="username"  type="text" placeholder="enter Username" class="form-control" required>
+          <div class="invalid-feedback">Please enter Username.</div>
+          <div class="valid-feedback">Looks good!</div>
+        </div> 
+        <div class="mb-3">
+          <label for="password" class="form-label"> password</label>
+          <input id="password"  name="password" type="password" placeholder="enter password" class="form-control" required>
+          <div class="invalid-feedback">Please enter password.</div>
+          <div class="valid-feedback">Looks good!</div>
+        </div>
+          <button type="submit" class="btn btn-dark">Login</button>
+         </form>
+    </div>
+</div>2
