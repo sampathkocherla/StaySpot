@@ -5,7 +5,7 @@ if(process.env.NODE_ENV !="production"){
  
 const express=require("express");
 const app=express();
- const port = process.env.PORT || 8080;
+const port = process.env.PORT || 8080;
  
 
 const path=require("path");
@@ -108,7 +108,7 @@ app.use("/listings/:id/reviews", reviewRoutes);
 app.use("/",UserRoutes);
  
  app.get("/",(req,res)=>{
-    res.send("route working fine");
+    res.redirect("/listings");
 });
  
 //  app.use("", (req, res, next) => {
