@@ -1,4 +1,7 @@
  <% layout('layouts/layout') -%> 
+   <script>
+  const listingCoordinates=<%- JSON.stringify(list.geometry.coordinates) %> ;
+  </script>
 
 <% if (success && success.length > 0) { %> 
   <div class="alert alert-success alert-dismissible fade show" role="alert"> 
@@ -90,6 +93,13 @@
           </div> 
         <% } %> 
       </div> 
+      <div class="col-8  mt-4">
+  <h3>This is Where you will be!</h3>
+  <div id="map"></div>
+ </div>
+  </div>
+</div>
+  <script src="/js/map.js"></script>
     </div> 
   </div> 
 </body>

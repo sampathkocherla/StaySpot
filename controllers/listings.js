@@ -9,19 +9,37 @@ module.exports.rendernewform = (req, res) => {
   res.render("listings/newlist");
 };
 
-module.exports.createlisting = async (req, res, next) => {
+ module.exports.createlisting = async (req, res) => {
+  const { location } = req.body.listing;  // ✅ fixed
+  const { path, filename } = req.file;
+
+  const newListing = new Listing(req.body.listing);
+  newListing.owner = req.user._id;
+  newListing.image = { url: path, filename };
+
   try {
-    const { path: url, filename } = req.file;
-    const newListing = new Listing(req.body.listing);
-    newListing.owner = req.user._id;
-    newListing.image = { url, filename };
-    await newListing.save();
-    req.flash("success", "New Listing Created");
-    res.redirect("/listings");
-  } catch (e) {
-    next(e);
+    const response = await fetch(
+      `https://us1.locationiq.com/v1/search?key=${process.env.LOCATIONIQ_API_KEY}&q=${encodeURIComponent(location)}&format=json`
+    );
+    const geoData = await response.json();
+
+    if (geoData && geoData.length > 0) {
+      newListing.geometry = {
+        type: "Point",
+        coordinates: [parseFloat(geoData[0].lon), parseFloat(geoData[0].lat)], // GeoJSON format
+      };
+    } else {
+      console.warn("No coordinates found for location:", location);
+    }
+  } catch (err) {
+    console.error("Failed to fetch coordinates:", err.message);
   }
+
+  await newListing.save();
+  req.flash("success", "New listing created !");
+  res.redirect("/listings");
 };
+
 
 module.exports.showlisting = async (req, res) => {
   const { id } = req.params;
