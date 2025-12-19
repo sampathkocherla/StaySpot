@@ -24,18 +24,7 @@ It features secure authentication, image uploads, interactive maps, and a clean 
 - Multer, Cloudinary  
 - Leaflet.js, LocationIQ  
 
-📂 Project Structure
-StaySpot/
-├── controllers/
-├── models/
-├── routes/
-├── public/
-├── middleware/
-├── views/
-├── app.js
-├── package.json
-└── README.md
-
+ 
 📡 Deployment
 
 MongoDB Atlas
