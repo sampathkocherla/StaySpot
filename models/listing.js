@@ -33,8 +33,8 @@ const listingSchema = new Schema({
   },
     geometry:{
         type: {
-      type: String, // Don't do `{ location: { type: String } }`
-      enum: ['Point'], // 'location.type' must be 'Point'
+      type: String, 
+      enum: ['Point'],
       required: true
     },
     coordinates: {
@@ -46,11 +46,11 @@ const listingSchema = new Schema({
 });
 
 // Cascade delete reviews when a listing is deleted
-// listingSchema.post("findOneAndDelete", async (listing) => {
-//   if (listing) {
-//     await Review.deleteMany({ _id: { $in: listing.reviews } });
-//   }
-// });
+ listingSchema.post("findOneAndDelete", async function (listing) {
+  if (listing) {
+    await Review.deleteMany({ _id: { $in: listing.reviews } });
+  }
+});
 
 const Listing = mongoose.model("Listing", listingSchema);
 module.exports = Listing;
