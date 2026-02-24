@@ -24,18 +24,11 @@ const upload = multer({ storage })
   
  
 
-/*show  single listing route*/
-//  router.get("/:id",wrapasync(listingControllers.showlisting));
+
  
 //edit route 
 router.get("/:id/edit",isLoggedIn,isOwner,wrapasync(listingControllers.editlisting));
  
-//update route
-//  router.put("/:id", isLoggedIn,isOwner,validatelisting,  wrapasync(listingControllers.updatelisting));
-
-
-//delete route 
-// router.delete("/:id",isLoggedIn,wrapasync(listingControllers.deletelisting));
  
  router.route("/:id")
   .get(wrapasync(listingControllers.showlisting))

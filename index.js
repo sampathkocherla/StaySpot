@@ -8,15 +8,9 @@ const port = process.env.PORT || 8080;
 
 const path = require("path");
 const mongoose = require("mongoose");
-const ejs = require("ejs");
-const Listing = require("./models/listing.js");
 const methodOverride = require("method-override");
 const engine = require("ejs-mate");
-const wrapasync = require("./utils/wrapasync.js");
-const Expresserror = require("./utils/expresserror");
-const review = require("./models/review.js");
-const { listingSchema } = require("./schema.js");
-const { reviewSchema } = require("./schema.js");
+
 const listingRoutes = require("./routes/listing");
 const reviewRoutes = require("./routes/review");
 const UserRoutes = require("./routes/user.js");
@@ -28,6 +22,7 @@ const passport = require("passport");
 const localStrategy = require("passport-local");
 const User = require("./models/user.js");
 
+// Middleware
 app.use(express.json());
 app.engine("ejs", engine);
 app.set("view engine", "ejs");
@@ -36,7 +31,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 
-// ------------------ DATABASE CONNECTION ------------------
+// Database
 const dburl = process.env.ATLASDB_URL || "mongodb://127.0.0.1:27017/wanderl";
 
 mongoose
@@ -48,7 +43,7 @@ mongoose
     console.error("❌ MongoDB connection error:", err);
   });
 
-// ------------------ SESSION STORE ------------------
+// Session Store
 const store = MongoStore.create({
   mongoUrl: dburl,
   crypto: {
@@ -76,13 +71,15 @@ const sessionoptions = {
 app.use(session(sessionoptions));
 app.use(flash());
 
-// ------------------ PASSPORT ------------------
+// Passport Configuration
 app.use(passport.initialize());
 app.use(passport.session());
+
 passport.use(new localStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+//Current User Middleware
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
@@ -90,17 +87,8 @@ app.use((req, res, next) => {
   next();
 });
 
-// ------------------ TEST ROUTE ------------------
-app.get("/registerUser", async (req, res) => {
-  let fakeUser = new User({
-    email: "sampathkocherla7@gmail.com",
-    username: "sampath_shannu",
-  });
-  let newUser = await User.register(fakeUser, "helloworld");
-  res.send(newUser);
-});
 
-// ------------------ ROUTES ------------------
+// Routes
 app.use("/listings", listingRoutes);
 app.use("/listings/:id/reviews", reviewRoutes);
 app.use("/", UserRoutes);
@@ -109,14 +97,13 @@ app.get("/", (req, res) => {
   res.redirect("/listings");
 });
 
-// ------------------ ERROR HANDLER ------------------
+// Error Handler
 app.use((err, req, res, next) => {
   console.log(err);
   let { statusCode = 500, message = "Something went wrong" } = err;
   res.render("./listings/error.ejs", { message });
 });
 
-// ------------------ SERVER ------------------
 app.listen(port, () => {
   console.log(`🚀 Server is running on port ${port}`);
 });
